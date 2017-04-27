@@ -30,7 +30,7 @@
 
 				<!-- use an array possibly to store the word chars -->
 				<div class="row">
-					<div></div>
+					<div id="gameplay"></div>
 				</div>
 				<div class="row">
 					<p>Number of Guesses Remaining</p>
@@ -42,34 +42,70 @@
 					<p>Letters Already Guessed</p>
 				</div>
 				<div class="row">
-					
+					<div id="lettersGuessed"></div>
 				</div>
 			</div>
 		</div>
 	</div>
 	<script type="text/javascript">
 		var game = {
-			currentWord: "dino",
+			word: "dino",
+			currentWord: [],
+			gameArray: [],
 			winCount: 0,
 			guessRemaining: 12,
 			charsGuessed: [],
 			image: null,
+			gameDisplay: null,
+			guessDisplay: null,
+			lettersDisplay: null,
 
-			inArray: function(char){
-				if (charsGuessed.indexOf(char) !== -1) {
-					charsGuessed.push(userGuess);
-					console.log(charsGuessed);
+			notInArray: function(char){
+				if (game.charsGuessed.indexOf(char)===-1) {
+					game.charsGuessed.push(char);
+					return true;
+					// console.log(game.charsGuessed);
+				}
+				else{
+					return false;
+					console.log("if statement fail");
+				}
+			},
+
+			wordToArray: function(){
+				game.currentWord = game.word.split("");
+			},
+
+			updateDisplay: function(){
+				game.gameDisplay.innerHTML= "woot";
+				game.guessDisplay.innerHTML= game.guessRemaining;
+				game.lettersDisplay.innerHTML= game.charsGuessed;
+
+			},
+
+			initialize: function(){
+				game.gameDisplay = document.getElementById("gameplay");
+				game.guessDisplay= document.getElementById("guesses");
+				game.lettersDisplay= document.getElementById("lettersGuessed");
 			}
 
 		}
 		document.onkeyup = function (event){
 
-				var userGuess = event.key.toLowerCase();
+			var userGuess = event.key.toLowerCase();
 
-				
+			if (game.notInArray(userGuess)){
+				// run check to see if letter is in current word. maybe change word to be stored in array?
+				if (true) {
 
 				}
+				else{
+					game.guessRemaining= game.guessRemaining-1;
+				}
 			}
+
+				
+		}
 	</script>
 </body>
 </html>
