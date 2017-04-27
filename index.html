@@ -60,6 +60,7 @@
 			guessDisplay: null,
 			lettersDisplay: null,
 
+			//checks to see if letter has been guessed before
 			notInArray: function(char){
 				if (game.charsGuessed.indexOf(char)===-1) {
 					game.charsGuessed.push(char);
@@ -67,22 +68,51 @@
 					// console.log(game.charsGuessed);
 				}
 				else{
-					return false;
 					console.log("if statement fail");
+					return false;					
 				}
 			},
 
-			wordToArray: function(){
+			gameLogic: function(char){
+				var contains = game.returnAllIndices(game.currentWord, char);
+				if(contains.length > 0){
+					game.revealLetter(contains, char);
+				}
+				else{
+					game.guessRemaining = game.guessRemaining -1;
+				}
+			},
+
+			returnAllIndices: function(array, char){
+				var indices = [];
+				for (var i = 0; i < array.length; i++) {
+					if (array[i] === char){
+						indices.push(i);
+					}
+				}
+				return indices;
+			},
+
+			revealLetter: function(array, char){
+				for (var i = 0; i < array.length; i++) {
+					game.gameArray[array[i]] = char; 
+				}
+			},
+
+			//converts word to an array for char comparison purposes and creates game array of equal length to display chars
+			initArrays: function(){
 				game.currentWord = game.word.split("");
+				game.gameArray = Array(game.currentWord.length).fill("_");
 			},
 
+			//updates DOM elements with current values
 			updateDisplay: function(){
-				game.gameDisplay.innerHTML= "woot";
+				game.gameDisplay.innerHTML= game.gameArray.join(" ");
 				game.guessDisplay.innerHTML= game.guessRemaining;
-				game.lettersDisplay.innerHTML= game.charsGuessed;
+				game.lettersDisplay.innerHTML= game.charsGuessed.join(", ");
 
 			},
-
+			//initializes connection to dom IDs
 			initialize: function(){
 				game.gameDisplay = document.getElementById("gameplay");
 				game.guessDisplay= document.getElementById("guesses");
@@ -96,16 +126,18 @@
 
 			if (game.notInArray(userGuess)){
 				// run check to see if letter is in current word. maybe change word to be stored in array?
-				if (true) {
-
-				}
-				else{
-					game.guessRemaining= game.guessRemaining-1;
-				}
+				game.gameLogic(userGuess);
+				game.updateDisplay();
 			}
 
 				
-		}
+		};
+
+		(function(){
+			game.initArrays();
+			game.initialize();
+			game.updateDisplay();
+		})();
 	</script>
 </body>
 </html>
