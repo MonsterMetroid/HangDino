@@ -59,6 +59,7 @@
 			gameDisplay: null,
 			guessDisplay: null,
 			lettersDisplay: null,
+			listOfDinosaurs: ["TYRANNOSAURUS", "VELOCIRAPTOR", "STEGOSAURUS", "MALAWISAURUS", "COMPSOGNATHUS",  "BRACHIOSAURUS", "DILOPHOSAURUS", "SEISMOSAURUS", "GALLIMIMUS"],
 
 			//checks to see if letter has been guessed before
 			notInArray: function(char){
@@ -80,13 +81,28 @@
 				}
 				else{
 					game.guessRemaining = game.guessRemaining -1;
+					game.checkIfLoss();
 				}
+			},
+
+			checkIfLoss: function(){
+				if (game.guessRemaining <= 0){
+					game.gameOver();
+				}
+			},
+
+			gameOver: function(){
+				alert("You have lost");
+				game.guessRemaining= "Game Over";
+				game.gameArray = game.currentWord;
+				game.updateDisplay();
+				document.onkeyup = null;
 			},
 
 			returnAllIndices: function(array, char){
 				var indices = [];
 				for (var i = 0; i < array.length; i++) {
-					if (array[i] === char){
+					if (array[i].toLowerCase() === char){
 						indices.push(i);
 					}
 				}
@@ -95,12 +111,13 @@
 
 			revealLetter: function(array, char){
 				for (var i = 0; i < array.length; i++) {
-					game.gameArray[array[i]] = char; 
+					game.gameArray[array[i]] = char.toUpperCase(); 
 				}
 			},
 
 			//converts word to an array for char comparison purposes and creates game array of equal length to display chars
 			initArrays: function(){
+				game.word = game.listOfDinosaurs[Math.floor(Math.random() * game.listOfDinosaurs.length)];
 				game.currentWord = game.word.split("");
 				game.gameArray = Array(game.currentWord.length).fill("_");
 			},
@@ -138,6 +155,20 @@
 			game.initialize();
 			game.updateDisplay();
 		})();
+
+
+  // TYRANNOSAURUS
+  // VELOCIRAPTOR
+  // TRICERATOPS
+  // STEGOSAURUS
+  // MALAWISAURUS
+  // COMPSOGNATHUS
+  // BRACHIOSAURUS
+  // DILOPHOSAURUS
+  // SEISMOSAURUS
+  // GALLIMIMUS
+
+
 	</script>
 </body>
 </html>
