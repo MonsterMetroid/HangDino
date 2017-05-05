@@ -22,7 +22,7 @@
 					<p>Press any key to get Started!</p>
 				</div>
 				<div class="row">
-					
+					<div id="wins"></div>
 				</div>
 				<div class="row">
 					<p>Current Word</p>
@@ -48,17 +48,20 @@
 		</div>
 	</div>
 	<script type="text/javascript">
+		var initialGuesses = 10;
+
 		var game = {
 			word: "dino",
 			currentWord: [],
 			gameArray: [],
 			winCount: 0,
-			guessRemaining: 12,
+			guessRemaining: initialGuesses,
 			charsGuessed: [],
 			image: null,
 			gameDisplay: null,
 			guessDisplay: null,
 			lettersDisplay: null,
+			winDisplay: null,
 			listOfDinosaurs: ["TYRANNOSAURUS", "VELOCIRAPTOR", "STEGOSAURUS", "MALAWISAURUS", "COMPSOGNATHUS",  "BRACHIOSAURUS", "DILOPHOSAURUS", "SEISMOSAURUS", "GALLIMIMUS"],
 
 			//checks to see if letter has been guessed before
@@ -78,11 +81,23 @@
 				var contains = game.returnAllIndices(game.currentWord, char);
 				if(contains.length > 0){
 					game.revealLetter(contains, char);
+					game.checkIfWin();
+					// game.updateDisplay();
 				}
 				else{
 					game.guessRemaining = game.guessRemaining -1;
 					game.checkIfLoss();
+					// game.updateDisplay();
 				}
+			},
+
+			checkIfWin: function(){
+				if (game.returnAllIndices(game.gameArray, "_") < 0){
+					game.winCount = game.winCount + 1;
+					game.initArrays;
+					alert("win")
+				}
+				else return;
 			},
 
 			checkIfLoss: function(){
@@ -95,8 +110,8 @@
 				alert("You have lost");
 				game.guessRemaining= "Game Over";
 				game.gameArray = game.currentWord;
-				game.updateDisplay();
-				document.onkeyup = null;
+				game.updateDisplay();				
+				game.initArrays();
 			},
 
 			returnAllIndices: function(array, char){
@@ -117,9 +132,12 @@
 
 			//converts word to an array for char comparison purposes and creates game array of equal length to display chars
 			initArrays: function(){
-				game.word = game.listOfDinosaurs[Math.floor(Math.random() * game.listOfDinosaurs.length)];
+				game.word = game.listOfDinosaurs[Math.floor(Math.random() * 12)];
 				game.currentWord = game.word.split("");
 				game.gameArray = Array(game.currentWord.length).fill("_");
+				game.guessRemaining = initialGuesses;
+				game.charsGuessed = [];
+				game.updateDisplay();
 			},
 
 			//updates DOM elements with current values
@@ -127,6 +145,7 @@
 				game.gameDisplay.innerHTML= game.gameArray.join(" ");
 				game.guessDisplay.innerHTML= game.guessRemaining;
 				game.lettersDisplay.innerHTML= game.charsGuessed.join(", ");
+				game.winDisplay.innerHTML= "Win Count: " + game.winCount;
 
 			},
 			//initializes connection to dom IDs
@@ -134,6 +153,7 @@
 				game.gameDisplay = document.getElementById("gameplay");
 				game.guessDisplay= document.getElementById("guesses");
 				game.lettersDisplay= document.getElementById("lettersGuessed");
+				game.winDisplay = document.getElementById("wins");
 			}
 
 		}
@@ -151,9 +171,9 @@
 		};
 
 		(function(){
-			game.initArrays();
 			game.initialize();
-			game.updateDisplay();
+			game.initArrays();
+
 		})();
 
 
